@@ -17,7 +17,7 @@ def avg_bogosort(low, high):
         mean = 0
         for j in avg_times:
             mean += j
-        mean / len(avg_times)
+        mean = mean / len(avg_times)
         print(f'It took  average {mean * 1000} milliseconds to bogosort an array with a size of {i}')
         time.sleep(3)
 
