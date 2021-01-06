@@ -48,7 +48,7 @@ async def reload(ctx, extension):
 
 @client.command()
 async def reload_all(ctx):
-    for filename in os.listdir('./cogs'):
+    for filename in os.listdir('./Cogs'):
         try:
             client.unload_extension(f'cogs.{filename[:-3]}')
             await ctx.send(f'{filename[:-3]} unloaded successfully')
