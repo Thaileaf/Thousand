@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtWidgets import QLabel
 from PyQt5.QtWidgets import QDialog
 from PyQt5.QtWidgets import QPushButton
+import time
 
 from PyQt5.QtCore import Qt
 
@@ -17,14 +18,16 @@ class SpotifyMainView(QMainWindow):
         self.setFixedSize(400, 400)
 
         self.generalLayout = QFormLayout()
+        self.generalLayout2 = QFormLayout()
 
         self._centralWidget = QWidget(self)
         self.setCentralWidget(self._centralWidget)
         self._centralWidget.setLayout(self.generalLayout)
 
-        self._createDisplay()
         self.login = LoginDialog()
         self.login.exec()
+        self._createDisplay()
+        self._centralWidget.setLayout(self.generalLayout2)
 
     def _createDisplay(self):
         self.save = QPushButton('Save songs')
@@ -52,6 +55,8 @@ class LoginDialog(QDialog):
         self.ulabel.setText('Username')
         self.plabel = QLabel()
         self.plabel.setText('Password')
+        self.dlabel = QLabel()
+        self.dlabel.setText('')
 
         self.user.setFixedHeight(35)
         self.passW.setFixedHeight(35)

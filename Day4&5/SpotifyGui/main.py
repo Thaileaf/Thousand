@@ -1,4 +1,6 @@
 from SpotifyView import SpotifyMainView
+from SpotifyModel import SpotifyModel
+from SpotifyController import SpotifyCtrl
 from PyQt5.QtWidgets import QApplication
 import sys
 # Client code
@@ -8,13 +10,13 @@ def main():
     pycalc = QApplication(sys.argv)
     # Show the calculator's GUI
     view = SpotifyMainView()
-    # model = evaluateExpression
+    model = SpotifyModel()
 
 
 
     # Create instances of the model and the controller
 
-    # PyCalcCtrl(model=model, view=view)
+    SpotifyCtrl(model=model, view=view)
 
     view.show()
     # Execute the calculator's main loop
