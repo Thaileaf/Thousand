@@ -7,6 +7,8 @@ from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtWidgets import QLabel
 from PyQt5.QtWidgets import QDialog
 from PyQt5.QtWidgets import QPushButton
+from PyQt5.QtWidgets import QApplication
+from PyQt5 import QtGui
 import time
 
 from PyQt5.QtCore import Qt
@@ -17,8 +19,7 @@ class SpotifyMainView(QMainWindow):
         self.setWindowTitle('Spotify App converter')
         self.setFixedSize(400, 400)
 
-        self.generalLayout = QFormLayout()
-        self.generalLayout2 = QFormLayout()
+        self.generalLayout = QVBoxLayout()
 
         self._centralWidget = QWidget(self)
         self.setCentralWidget(self._centralWidget)
@@ -26,15 +27,27 @@ class SpotifyMainView(QMainWindow):
 
         self.login = LoginDialog()
         self.login.exec()
+
         self._createDisplay()
-        self._centralWidget.setLayout(self.generalLayout2)
 
     def _createDisplay(self):
         self.save = QPushButton('Save songs')
         self.restore = QPushButton('Restore songs')
 
-        self.generalLayout.addWidget(self.save)
-        self.generalLayout.addWidget(self.restore)
+        buttonsLayout = QGridLayout()
+
+        buttonsLayout.addWidget(self.save)
+        buttonsLayout.addWidget(self.restore)
+
+        self.generalLayout.addLayout(buttonsLayout)
+
+        self.dlabel = QLabel()
+        self.generalLayout.addWidget(self.dlabel)
+        self.dlabel.setText('')
+
+    def setDisplayText(self, text):
+        self.dlabel.setText(text)
+        QApplication.processEvents()
 
 class LoginDialog(QDialog):
     def __init__(self, *args, **kwargs):
@@ -55,8 +68,7 @@ class LoginDialog(QDialog):
         self.ulabel.setText('Username')
         self.plabel = QLabel()
         self.plabel.setText('Password')
-        self.dlabel = QLabel()
-        self.dlabel.setText('')
+
 
         self.user.setFixedHeight(35)
         self.passW.setFixedHeight(35)
