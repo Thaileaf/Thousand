@@ -10,14 +10,15 @@ class SpotifyCtrl:
 
     def _saveSong(self):
         self.view.setDisplayText('Saving Songs - Please Wait')
-        self.get_data.save_songs()
+        folder = self.view.chooseFile()
+        self.get_data.save_songs(folder)
         self.view.setDisplayText('Songs saved')
 
     def _setDisplayText(self, text):
         self.view.setDisplayText(text)
 
     def restore_songs(self):
-        self.view.chooseFile()
+        pass
 
     def connect_signals(self):
         self.view.save.clicked.connect(functools.partial(self._saveSong))

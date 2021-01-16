@@ -40,7 +40,7 @@ class SpotifyModel:
         return songs
 
 
-    def save_songs(self):
+    def save_songs(self, path):
         id = self.sp.me()['id']
         results = self.sp.current_user_playlists(limit=50)
         playlists = {}
@@ -54,6 +54,6 @@ class SpotifyModel:
             else:
                 playlists[playlist['name']] = playlist['uri']
 
-
-        with open('test.json', 'w') as f:
+        file_path = path + "/songs.json"
+        with open(file_path, 'w') as f:
             json.dump(playlists, f, indent=4)
