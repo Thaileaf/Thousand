@@ -8,7 +8,7 @@ def main():
     """Main function."""
     # Create an instance of QApplication
     pycalc = QApplication(sys.argv)
-    # Show the calculator's GUI
+    # Show the Spotify GUI
     view = SpotifyMainView()
     model = SpotifyModel()
 

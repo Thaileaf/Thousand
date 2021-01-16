@@ -17,9 +17,9 @@ class SpotifyCtrl:
         self.view.setDisplayText(text)
 
     def restore_songs(self):
-        print('hi')
+        self.view.chooseFile()
 
     def connect_signals(self):
-        self.view.save.clicked.connect(functools.partial(self._saveSong))  # filler code here
-        self.view.restore.clicked.connect(functools.partial(self.restore_songs))  # filler code here
+        self.view.save.clicked.connect(functools.partial(self._saveSong))
+        self.view.restore.clicked.connect(functools.partial(self.restore_songs))
 

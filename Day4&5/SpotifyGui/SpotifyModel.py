@@ -12,9 +12,9 @@ class SpotifyModel:
         with open('spotifySettings.json', 'r') as f:
             self.keys = json.load(f)
 
-        self.sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=self.keys['client'],
-                                                       client_secret=self.keys['secret'],
-                                                       redirect_uri="https://google.com/", scope=self.scope))
+        self.sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=self.keys['client'],client_secret=self.keys['secret'],
+                                                            scope=self.scope,
+                                                            redirect_uri='https://google.com'))
 
     def show_tracks_playlist(self, results):
         for item in results['items']:

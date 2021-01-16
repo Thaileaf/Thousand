@@ -8,6 +8,7 @@ from PyQt5.QtWidgets import QLabel
 from PyQt5.QtWidgets import QDialog
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QFileDialog
 from PyQt5 import QtGui
 import time
 
@@ -49,6 +50,11 @@ class SpotifyMainView(QMainWindow):
         self.dlabel.setText(text)
         QApplication.processEvents()
 
+    def chooseFile(self):
+        self.file = FileDialog()
+        self.file.setFileMode
+        self.file.exec()
+
 class LoginDialog(QDialog):
     def __init__(self, *args, **kwargs):
         super(LoginDialog, self).__init__(*args, **kwargs)
@@ -83,7 +89,11 @@ class LoginDialog(QDialog):
         self.layout.addWidget(self.buttonBox)
         self.setLayout(self.layout)
 
+class FileDialog(QFileDialog):
+    def __init__(self, *args, **kwargs):
+        super(FileDialog, self).__init__(*args, **kwargs)
 
+        self.setWindowTitle('Files')
 
 
 

@@ -1,5 +1,6 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
+from spotipy.oauth2 import SpotifyClientCredentials
 import os
 import json
 # scope = 'user-library-read'
@@ -31,9 +32,8 @@ def playlist_to_list(playlist):
     return songs
 
 
-sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=keys['client'],
-                                               client_secret=keys['secret'],
-                                               redirect_uri="https://google.com/", scope=scope))
+client_cred_manager = SpotifyClientCredentials(client_id=keys['client'], client_secret=keys['secret'])
+sp = spotipy.Spotify(client_credentials_manager=client_cred_manager)
 
 id = sp.me()['id']
 
