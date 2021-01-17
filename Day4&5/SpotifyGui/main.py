@@ -7,7 +7,7 @@ import sys
 def main():
     """Main function."""
     # Create an instance of QApplication
-    pycalc = QApplication(sys.argv)
+    spotify_app = QApplication(sys.argv)
     # Show the Spotify GUI
     view = SpotifyMainView()
     model = SpotifyModel()
@@ -20,7 +20,7 @@ def main():
 
     view.show()
     # Execute the calculator's main loop
-    sys.exit(pycalc.exec_())
+    sys.exit(spotify_app.exec_())
 
 
 if __name__ == '__main__':

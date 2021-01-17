@@ -54,8 +54,7 @@ class SpotifyMainView(QMainWindow):
         self.file = FileDialog()
         self.file.setFileMode(QFileDialog.Directory)
         self.file.exec()
-        print(self.file.selectedFiles())
-        return self.file.selectedFiles()
+        return self.file.selectedFiles()[0]
 
 class LoginDialog(QDialog):
     def __init__(self, *args, **kwargs):
@@ -95,7 +94,7 @@ class FileDialog(QFileDialog):
     def __init__(self, *args, **kwargs):
         super(FileDialog, self).__init__(*args, **kwargs)
 
-        self.setWindowTitle('Files')
+        self.setWindowTitle('Files test')
 
 
 

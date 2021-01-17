@@ -14,7 +14,7 @@ class SpotifyModel:
 
         self.sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=self.keys['client'],client_secret=self.keys['secret'],
                                                             scope=self.scope,
-                                                            redirect_uri='https://google.com'))
+                                                            redirect_uri='https://www.google.com'))
 
     def show_tracks_playlist(self, results):
         for item in results['items']:
@@ -40,7 +40,7 @@ class SpotifyModel:
         return songs
 
 
-    def save_songs(self, path):
+    def save_playlists_data(self, path):
         id = self.sp.me()['id']
         results = self.sp.current_user_playlists(limit=50)
         playlists = {}
@@ -54,6 +54,16 @@ class SpotifyModel:
             else:
                 playlists[playlist['name']] = playlist['uri']
 
+
+
+
+        file_path = path + "/songs.json"
+        with open(file_path, 'w') as f:
+            json.dump(playlists, f, indent=4)
+
+
+    def file_test(self, path):
+        playlists = {'test':'test'}
         file_path = path + "/songs.json"
         with open(file_path, 'w') as f:
             json.dump(playlists, f, indent=4)

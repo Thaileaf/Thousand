@@ -11,7 +11,10 @@ class SpotifyCtrl:
     def _saveSong(self):
         self.view.setDisplayText('Saving Songs - Please Wait')
         folder = self.view.chooseFile()
-        self.get_data.save_songs(folder)
+        self.get_data.save_playlists_data(folder)
+
+        # self.get_data.file_test(folder)
+
         self.view.setDisplayText('Songs saved')
 
     def _setDisplayText(self, text):
