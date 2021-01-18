@@ -11,7 +11,10 @@ class SpotifyCtrl:
     def _saveSong(self):
         self.view.setDisplayText('Saving Songs - Please Wait')
         folder = self.view.chooseFile()
-        self.get_data.save_playlists_data(folder)
+        try:
+            self.get_data.save_playlists_data(folder)
+        except Exception as e:
+            print(e)
 
         # self.get_data.file_test(folder)
 

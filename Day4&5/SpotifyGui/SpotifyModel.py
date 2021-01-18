@@ -14,7 +14,7 @@ class SpotifyModel:
 
         self.sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=self.keys['client'],client_secret=self.keys['secret'],
                                                             scope=self.scope,
-                                                            redirect_uri='https://www.google.com'))
+                                                            redirect_uri='http://localhost:8080'))
 
     def show_tracks_playlist(self, results):
         for item in results['items']:
