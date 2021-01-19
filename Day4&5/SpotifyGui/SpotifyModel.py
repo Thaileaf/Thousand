@@ -2,6 +2,7 @@ import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import os
 import json
+import requests
 
 
 class SpotifyModel:
@@ -39,12 +40,19 @@ class SpotifyModel:
 
         return songs
 
+    def save_cover_image(self, playlist_id, path):
+        url = self.sp.playlist_cover_image(playlist_id)[0]['url']
+        response = requests.get(url=url)
+        os.makedirs(path + '/spotify_covers',exist_ok=True)
+        file_path = path + f'/spotify_covers/{playlist_id}.jpg'
+        with open(file_path, 'wb') as f:
+            f.write(response.content)
+
 
     def save_playlists_data(self, path):
         id = self.sp.me()['id']
         results = self.sp.current_user_playlists(limit=50)
         playlists = {}
-        images = []
 
 
 
@@ -55,13 +63,10 @@ class SpotifyModel:
                 res = self.sp.playlist(playlist['id'], fields='tracks')
                 playlists[playlist['name']] = {}
                 playlists[playlist['name']]['tracks'] = self.playlist_to_list(res)
-                playlists[playlist['name']]['cover_image'] = self.sp.playlist_cover_image(playlist['id'])[0]['url']
-
+                self.save_cover_image(playlist['id'], path)
 
             else:
                 playlists[playlist['name']] = playlist['uri']
-
-
 
 
         file_path = path + "/songs.json"
