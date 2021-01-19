@@ -8,13 +8,13 @@ class SpotifyModel:
 
     def __init__(self):
 
-        self.scope = 'playlist-read-private'
+        self.scope = 'playlist-read-private playlist-modify-private'
         with open('spotifySettings.json', 'r') as f:
             self.keys = json.load(f)
 
         self.sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=self.keys['client'],client_secret=self.keys['secret'],
                                                             scope=self.scope,
-                                                            redirect_uri='http://localhost:8080'))
+                                                            redirect_uri='http://localhost:8888'))
 
     def show_tracks_playlist(self, results):
         for item in results['items']:
@@ -22,12 +22,12 @@ class SpotifyModel:
             print("%32.32s %s" % (track['artists'][0]['name'], track['name']))
 
     def playlist_to_list(self, playlist):
-        songs = []
+        songs = {}
 
         def append_songs(tracks):
             for song in tracks['items']:
                 try:
-                    songs.append((song['track']['name'], song['track']['uri']))
+                    songs[song['track']['name']] = song['track']['uri']
                 except Exception as e:
                     print(e)
 
@@ -44,13 +44,20 @@ class SpotifyModel:
         id = self.sp.me()['id']
         results = self.sp.current_user_playlists(limit=50)
         playlists = {}
+        images = []
+
+
 
         for i, playlist in enumerate(results['items']):
             if playlist['owner']['id'].lower() == id.lower():
                 print("%d %s" % (i, playlist['name']))
 
                 res = self.sp.playlist(playlist['id'], fields='tracks')
-                playlists[playlist['name']] = self.playlist_to_list(res)
+                playlists[playlist['name']] = {}
+                playlists[playlist['name']]['tracks'] = self.playlist_to_list(res)
+                playlists[playlist['name']]['cover_image'] = self.sp.playlist_cover_image(playlist['id'])[0]['url']
+
+
             else:
                 playlists[playlist['name']] = playlist['uri']
 
@@ -60,6 +67,9 @@ class SpotifyModel:
         file_path = path + "/songs.json"
         with open(file_path, 'w') as f:
             json.dump(playlists, f, indent=4)
+
+    def restore_playlists(self, data):
+        self.sp.user_playlist_create()
 
 
     def file_test(self, path):
