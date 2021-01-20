@@ -26,8 +26,8 @@ class SpotifyMainView(QMainWindow):
         self.setCentralWidget(self._centralWidget)
         self._centralWidget.setLayout(self.generalLayout)
 
-        self.login = LoginDialog()
-        self.login.exec()
+        # self.login = LoginDialog()
+        # self.login.exec()
 
         self._createDisplay()
 
@@ -52,49 +52,53 @@ class SpotifyMainView(QMainWindow):
 
     def chooseFile(self):
         self.file = FileDialog()
-        self.file.setFileMode(QFileDialog.Directory)
         self.file.exec()
         return self.file.selectedFiles()[0]
 
-class LoginDialog(QDialog):
-    def __init__(self, *args, **kwargs):
-        super(LoginDialog, self).__init__(*args, **kwargs)
+    def reconfirm(self):
+        self.reconfirm_dialog = ReconfirmDialog()
+        return self.reconfirm_dialog.exec()
 
-        self.setWindowTitle('Login')
+    def chooseSave(self):
+        self.save = QFileDialog()
+        return self.save.getOpenFileName()
+
+class ReconfirmDialog(QDialog):
+    def __init__(self, *args, **kwargs):
+        super(ReconfirmDialog, self).__init__(*args, **kwargs)
+
+        self.setWindowTitle('Restore Songs')
+        self.setFixedSize(300, 100)
+
+
+        self.layout = QVBoxLayout()
+
+        self.setLayout(self.layout)
+
+        self.label = QLabel()
+        self.label.setText('ArE YoU SurE yOu WaNT to resStoRe SongS?')
 
         buttons = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
-        print(buttons)
 
         self.buttonBox = QDialogButtonBox(buttons)
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
 
-        self.user = QLineEdit()
-        self.passW = QLineEdit()
-        self.ulabel = QLabel()
-        self.ulabel.setText('Username')
-        self.plabel = QLabel()
-        self.plabel.setText('Password')
-
-
-        self.user.setFixedHeight(35)
-        self.passW.setFixedHeight(35)
-
-
-
-        self.layout = QFormLayout()
-        self.layout.addWidget(self.ulabel)
-        self.layout.addWidget(self.user)
-        self.layout.addWidget(self.plabel)
-        self.layout.addWidget(self.passW)
+        self.layout.addWidget(self.label)
         self.layout.addWidget(self.buttonBox)
-        self.setLayout(self.layout)
+
+
+
 
 class FileDialog(QFileDialog):
     def __init__(self, *args, **kwargs):
         super(FileDialog, self).__init__(*args, **kwargs)
 
         self.setWindowTitle('Files test')
+        self.setFileMode(QFileDialog.Directory)
+
+    def closeEvent(self):
+        return 0
 
 
 

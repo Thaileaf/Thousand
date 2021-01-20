@@ -11,10 +11,10 @@ class SpotifyCtrl:
     def _saveSong(self):
         self.view.setDisplayText('Saving Songs - Please Wait')
         folder = self.view.chooseFile()
-        try:
+        if folder:
             self.get_data.save_playlists_data(folder)
-        except Exception as e:
-            print(e)
+        else:
+            pass
 
         # self.get_data.file_test(folder)
 
@@ -24,7 +24,11 @@ class SpotifyCtrl:
         self.view.setDisplayText(text)
 
     def restore_songs(self):
-        pass
+        with open(self.view.chooseSave()[0]) as data:
+            if self.view.reconfirm():
+                self.get_data.restore_playlists(data)
+            else:
+                pass
 
     def connect_signals(self):
         self.view.save.clicked.connect(functools.partial(self._saveSong))

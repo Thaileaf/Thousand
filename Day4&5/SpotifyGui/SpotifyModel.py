@@ -13,7 +13,8 @@ class SpotifyModel:
         with open('spotifySettings.json', 'r') as f:
             self.keys = json.load(f)
 
-        self.sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=self.keys['client'],client_secret=self.keys['secret'],
+        self.sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=self.keys['client'],
+                                                            client_secret=self.keys['secret'],
                                                             scope=self.scope,
                                                             redirect_uri='http://localhost:8888'))
 
@@ -63,10 +64,17 @@ class SpotifyModel:
                 res = self.sp.playlist(playlist['id'], fields='tracks')
                 playlists[playlist['name']] = {}
                 playlists[playlist['name']]['tracks'] = self.playlist_to_list(res)
+                playlists[playlist['name']]['id'] = playlist['id']
+                playlists[playlist['name']]['private'] = True
+                try:
+                    playlists[playlist['name']]['description'] = playlist['description']
+                except Exception as e:
+                    print(e)
+                    print(playlist)
                 self.save_cover_image(playlist['id'], path)
 
             else:
-                playlists[playlist['name']] = playlist['uri']
+                playlists[playlist['name']] = {'uri':playlist['uri'], 'private':False}
 
 
         file_path = path + "/songs.json"
@@ -74,7 +82,11 @@ class SpotifyModel:
             json.dump(playlists, f, indent=4)
 
     def restore_playlists(self, data):
-        self.sp.user_playlist_create()
+        # for playlist in data:
+        #     if playlist['private']:
+        #         self.sp.user_playlist_create(self.sp.me()['id'], playlist, False, False, playlist['description'])
+
+        self.sp.user_playlist_create(self.sp.me()['id'], 'test_playlist', False, False, 'test description')
 
 
     def file_test(self, path):
