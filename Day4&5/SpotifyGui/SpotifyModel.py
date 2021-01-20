@@ -3,7 +3,7 @@ from spotipy.oauth2 import SpotifyOAuth
 import os
 import json
 import requests
-
+import math
 
 class SpotifyModel:
 
@@ -28,10 +28,8 @@ class SpotifyModel:
 
         def append_songs(tracks):
             for song in tracks['items']:
-                try:
+                if(song['is_local'] == False):
                     songs[song['track']['name']] = song['track']['uri']
-                except Exception as e:
-                    print(e)
 
         tracks = playlist['tracks']
         append_songs(tracks)
@@ -51,30 +49,39 @@ class SpotifyModel:
 
 
     def save_playlists_data(self, path):
+
         id = self.sp.me()['id']
         results = self.sp.current_user_playlists(limit=50)
+        print(results)
         playlists = {}
 
 
+        try:
+            for i, playlist in enumerate(results['items']):
+                if playlist['owner']['id'].lower() == id.lower():
+                    print("%d %s" % (i, playlist['name']))
+                    try:
 
-        for i, playlist in enumerate(results['items']):
-            if playlist['owner']['id'].lower() == id.lower():
-                print("%d %s" % (i, playlist['name']))
+                        res = self.sp.playlist(playlist['id'], fields='tracks')
+                        playlists[playlist['name']] = {}
+                        playlists[playlist['name']]['tracks'] = self.playlist_to_list(res)
+                        playlists[playlist['name']]['id'] = playlist['id']
+                        playlists[playlist['name']]['private'] = True
+                        playlists[playlist['name']]['description'] = playlist['description']
 
-                res = self.sp.playlist(playlist['id'], fields='tracks')
-                playlists[playlist['name']] = {}
-                playlists[playlist['name']]['tracks'] = self.playlist_to_list(res)
-                playlists[playlist['name']]['id'] = playlist['id']
-                playlists[playlist['name']]['private'] = True
-                try:
-                    playlists[playlist['name']]['description'] = playlist['description']
-                except Exception as e:
-                    print(e)
-                    print(playlist)
-                self.save_cover_image(playlist['id'], path)
+                    except Exception as e:
+                        print(e)
+                        print('fail 2')
 
-            else:
-                playlists[playlist['name']] = {'uri':playlist['uri'], 'private':False}
+
+                    self.save_cover_image(playlist['id'], path)
+
+                else:
+                    playlists[playlist['name']] = {'uri':playlist['uri'], 'private':False}
+
+        except Exception as e:
+            print('test point at 1')
+            print(e)
 
 
         file_path = path + "/songs.json"
@@ -82,11 +89,26 @@ class SpotifyModel:
             json.dump(playlists, f, indent=4)
 
     def restore_playlists(self, data):
-        # for playlist in data:
-        #     if playlist['private']:
-        #         self.sp.user_playlist_create(self.sp.me()['id'], playlist, False, False, playlist['description'])
+        dict = json.load(data)
 
-        self.sp.user_playlist_create(self.sp.me()['id'], 'test_playlist', False, False, 'test description')
+        for playlist in dict:
+            if dict[playlist]['private']:
+                playlist_id = self.sp.user_playlist_create(self.sp.me()['id'], playlist, False, False, dict[playlist]['description'])['id']
+                # self.sp.playlist_upload_cover_image(playlist_id, image_b64)
+                uris = list(dict[playlist]['tracks'].values())
+
+                if len(uris) > 100:
+                    for i in range(0, math.ceil(len(uris) / 100)):
+                        self.sp.playlist_add_items(playlist_id, uris[0+(100*i):99+(100*i)])
+                else:
+                    self.sp.playlist_add_items(playlist_id, uris)
+
+
+
+
+
+
+
 
 
     def file_test(self, path):
