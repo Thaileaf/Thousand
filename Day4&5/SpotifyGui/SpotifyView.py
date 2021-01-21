@@ -10,6 +10,7 @@ from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5 import QtGui
+from PyQt5 import Qt
 import time
 
 from PyQt5.QtCore import Qt
@@ -52,10 +53,17 @@ class SpotifyMainView(QMainWindow):
         self.dlabel.setText(text)
         QApplication.processEvents()
 
+    def inputFile(self):
+        self.file_name_dialog = SetFileNameDialog(title='Save',
+                                                  dialog='Name of File?')
+        self.file_name_dialog.exec()
+        return 'test'
+
     def chooseFile(self):
-        self.file = FileDialog()
-        self.file.exec()
-        return self.file.selectedFiles()[0]
+        self.file = FileDialog(title='Choose Folder to Save')
+        self.file.setFileMode(QFileDialog.DirectoryOnly)
+        return self.file.selectedFiles()[0] if self.file.exec() else 0
+
 
     def reconfirm(self):
         self.reconfirm_dialog = ReconfirmDialog(title='Restore playlists',
@@ -68,9 +76,10 @@ class SpotifyMainView(QMainWindow):
         return self.reconfirm_dialog.exec()
 
     def chooseSave(self):
+        self.save = FileDialog(title='Choose Selected File')
+        self.save.setAcceptMode(QFileDialog.AcceptOpen)
 
-        self.save = QFileDialog()
-        return self.save.getOpenFileName()
+        return self.save.getOpenFileName()[0] if self.save.exec() else 0
 
 class ReconfirmDialog(QDialog):
     def __init__(self, title, dialog, *args, **kwargs):
@@ -96,19 +105,26 @@ class ReconfirmDialog(QDialog):
         self.layout.addWidget(self.label)
         self.layout.addWidget(self.buttonBox)
 
+class SetFileNameDialog(ReconfirmDialog):
+    def __init__(self, *args, **kwargs):
+        super(SetFileNameDialog, self).__init__(*args, **kwargs)
+        self.name = QLineEdit()
+        self.name.setAlignment(Qt.AlignLeft)
+        self.layout.insertWidget(0, self.name)
+
+
 
 
 
 class FileDialog(QFileDialog):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, title, *args, **kwargs):
         super(FileDialog, self).__init__(*args, **kwargs)
 
-        self.setWindowTitle('Files test')
-        self.setFileMode(QFileDialog.Directory)
+        self.setWindowTitle(title)
 
-    def closeEvent(self, event):
-        event.ignore()
-        # super(FileDialog, self).closeEvent(event)
+    def reject(self):
+        print('hi')
+        super().reject()
 
 
 
