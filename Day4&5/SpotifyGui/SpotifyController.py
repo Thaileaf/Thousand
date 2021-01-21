@@ -33,15 +33,14 @@ class SpotifyCtrl:
 
 
     def restore_songs(self):
-
-        with open(self.view.chooseSave()[0]) as data:
-            if self.view.reconfirm():
-                self.view.setDisplayText('Restoring Songs - Please Wait')
-                self.get_data.restore_playlists(data)
-                # self.get_data.delete_all_playlists()
-                self.view.setDisplayText('Songs restored')
-            else:
-                pass
+        file = self.view.chooseSave()
+        if file[0]:
+            with open(file[0]) as data:
+                if self.view.reconfirm():
+                    self.view.setDisplayText('Restoring Songs - Please Wait')
+                    self.get_data.restore_playlists(data)
+                    # self.get_data.delete_all_playlists()
+                    self.view.setDisplayText('Songs restored')
 
 
 

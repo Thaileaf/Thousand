@@ -68,6 +68,7 @@ class SpotifyMainView(QMainWindow):
         return self.reconfirm_dialog.exec()
 
     def chooseSave(self):
+
         self.save = QFileDialog()
         return self.save.getOpenFileName()
 
@@ -105,8 +106,10 @@ class FileDialog(QFileDialog):
         self.setWindowTitle('Files test')
         self.setFileMode(QFileDialog.Directory)
 
-    def closeEvent(self):
-        return 0
+    def closeEvent(self, event):
+        event.ignore()
+        # super(FileDialog, self).closeEvent(event)
+
 
 
 
