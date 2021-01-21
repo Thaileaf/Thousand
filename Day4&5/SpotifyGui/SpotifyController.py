@@ -19,12 +19,18 @@ class SpotifyCtrl:
         else:
             pass
 
-        # self.get_data.file_test(folder)
 
         self.view.setDisplayText('Songs saved')
 
     def _setDisplayText(self, text):
         self.view.setDisplayText(text)
+
+    def delete_songs(self):
+        if self.view.reconfirm_delete():
+            self.view.setDisplayText('Deleting Playlists - Please Wait')
+            self.get_data.delete_all_playlists()
+            self.view.setDisplayText('Playlists deleted')
+
 
     def restore_songs(self):
 
@@ -42,4 +48,5 @@ class SpotifyCtrl:
     def connect_signals(self):
         self.view.save.clicked.connect(functools.partial(self._saveSong))
         self.view.restore.clicked.connect(functools.partial(self.restore_songs))
+        self.view.delete.clicked.connect(functools.partial(self.delete_songs))
 

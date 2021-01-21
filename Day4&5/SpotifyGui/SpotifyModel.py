@@ -125,12 +125,14 @@ class SpotifyModel:
                 playlist_id = self.sp.user_playlist_create(self.sp.me()['id'], playlist, False, False, dict[playlist]['description'])['id']
                 # self.sp.playlist_upload_cover_image(playlist_id, image_b64)
                 uris = list(dict[playlist]['tracks'].values())
+                print(list(dict[playlist]['tracks']))
 
                 if len(uris) > 100:
                     for i in range(0, math.ceil(len(uris) / 100)):
                         self.sp.playlist_add_items(playlist_id, uris[0+(100*i):99+(100*i)])
                 else:
                     self.sp.playlist_add_items(playlist_id, uris)
+
 
 
 

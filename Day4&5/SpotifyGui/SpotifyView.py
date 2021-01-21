@@ -34,11 +34,13 @@ class SpotifyMainView(QMainWindow):
     def _createDisplay(self):
         self.save = QPushButton('Save songs')
         self.restore = QPushButton('Restore songs')
+        self.delete = QPushButton('Delete playlists')
 
         buttonsLayout = QGridLayout()
 
         buttonsLayout.addWidget(self.save)
         buttonsLayout.addWidget(self.restore)
+        buttonsLayout.addWidget(self.delete)
 
         self.generalLayout.addLayout(buttonsLayout)
 
@@ -56,7 +58,13 @@ class SpotifyMainView(QMainWindow):
         return self.file.selectedFiles()[0]
 
     def reconfirm(self):
-        self.reconfirm_dialog = ReconfirmDialog()
+        self.reconfirm_dialog = ReconfirmDialog(title='Restore playlists',
+                                                dialog='Are you sure you want to restore playlists')
+        return self.reconfirm_dialog.exec()
+
+    def reconfirm_delete(self):
+        self.reconfirm_dialog = ReconfirmDialog(title='Delete playlists',
+                                                dialog='Are you sure you want to delete all playlists?')
         return self.reconfirm_dialog.exec()
 
     def chooseSave(self):
@@ -64,10 +72,10 @@ class SpotifyMainView(QMainWindow):
         return self.save.getOpenFileName()
 
 class ReconfirmDialog(QDialog):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, title, dialog, *args, **kwargs):
         super(ReconfirmDialog, self).__init__(*args, **kwargs)
 
-        self.setWindowTitle('Restore Songs')
+        self.setWindowTitle(title)
         self.setFixedSize(300, 100)
 
 
@@ -76,7 +84,7 @@ class ReconfirmDialog(QDialog):
         self.setLayout(self.layout)
 
         self.label = QLabel()
-        self.label.setText('ArE YoU SurE yOu WaNT to resStoRe SongS?')
+        self.label.setText(dialog)
 
         buttons = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
 
