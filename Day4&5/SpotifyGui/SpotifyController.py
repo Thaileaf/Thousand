@@ -32,9 +32,12 @@ class SpotifyCtrl:
             if self.view.reconfirm():
                 self.view.setDisplayText('Restoring Songs - Please Wait')
                 self.get_data.restore_playlists(data)
+                # self.get_data.delete_all_playlists()
                 self.view.setDisplayText('Songs restored')
             else:
                 pass
+
+
 
     def connect_signals(self):
         self.view.save.clicked.connect(functools.partial(self._saveSong))
