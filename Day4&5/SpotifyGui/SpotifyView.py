@@ -56,8 +56,8 @@ class SpotifyMainView(QMainWindow):
     def inputFile(self):
         self.file_name_dialog = SetFileNameDialog(title='Save',
                                                   dialog='Name of File?')
-        self.file_name_dialog.exec()
-        return 'test'
+
+        return self.file_name_dialog.getText() if self.file_name_dialog.exec() else 0
 
     def chooseFile(self):
         self.file = FileDialog(title='Choose Folder to Save')
@@ -75,11 +75,11 @@ class SpotifyMainView(QMainWindow):
                                                 dialog='Are you sure you want to delete all playlists?')
         return self.reconfirm_dialog.exec()
 
-    def chooseSave(self):
-        self.save = FileDialog(title='Choose Selected File')
-        self.save.setAcceptMode(QFileDialog.AcceptOpen)
-
-        return self.save.getOpenFileName()[0] if self.save.exec() else 0
+    # def chooseSave(self):
+    #     self.save = FileDialog(title='Choose Selected File')
+    #     self.save.setAcceptMode(QFileDialog.AcceptOpen)
+    #
+    #     return self.save.getOpenFileName()[0] if self.save.exec() else 0
 
 class ReconfirmDialog(QDialog):
     def __init__(self, title, dialog, *args, **kwargs):
@@ -110,7 +110,13 @@ class SetFileNameDialog(ReconfirmDialog):
         super(SetFileNameDialog, self).__init__(*args, **kwargs)
         self.name = QLineEdit()
         self.name.setAlignment(Qt.AlignLeft)
+        self.name.setPlaceholderText('Enter File Name Here')
         self.layout.insertWidget(0, self.name)
+
+    def getText(self):
+        return self.name.text()
+
+
 
 
 

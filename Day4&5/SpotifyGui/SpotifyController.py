@@ -1,6 +1,7 @@
 from SpotifyView import SpotifyMainView
 import time
 import functools
+import os
 class SpotifyCtrl:
     def __init__(self, model, view):
         self.get_data = model
@@ -14,7 +15,7 @@ class SpotifyCtrl:
             folder = self.view.chooseFile()
             if folder:
                 self.view.setDisplayText('Saving Songs - Please Wait')
-                self.get_data.save_playlists_data(folder[0])
+                self.get_data.save_playlists_data(folder, name)
                 self.view.setDisplayText('Songs saved')
             else:
                 self.view.setDisplayText('')
@@ -31,14 +32,13 @@ class SpotifyCtrl:
 
 
     def restore_songs(self):
-        file = self.view.chooseSave()
-        if file:
-            with open(file[0]) as data:
-                if self.view.reconfirm():
-                    self.view.setDisplayText('Restoring Songs - Please Wait')
-                    self.get_data.restore_playlists(data)
-                    # self.get_data.delete_all_playlists()
-                    self.view.setDisplayText('Songs restored')
+        folder = self.view.chooseFile()
+        if folder:
+            if self.view.reconfirm():
+                self.view.setDisplayText('Restoring Songs - Please Wait')
+                self.get_data.restore_playlists(folder)
+                # self.get_data.delete_all_playlists()
+                self.view.setDisplayText('Songs restored')
 
 
 
